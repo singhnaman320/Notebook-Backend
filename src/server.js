@@ -13,7 +13,8 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: "http://localhost:5173", // Vite's default port
+    // origin: "http://localhost:5173",
+    origin: "https://notebook-frontend-murex.vercel.app",
     credentials: true,
   })
 );
