@@ -15,11 +15,10 @@ This is the backend server for the Notebook application, built with Node.js, Exp
 - MongoDB installed and running
 - npm or yarn package manager
 
-## Installation
-
-1. Install dependencies:
-```bash
-npm install
+## .env
+- MONGODB_URI=<YOUR_MONGO_URI>
+- JWT_SECRET=<YOUR_JWT_SECRET_KEY>
+- PORT=5000
 
 ## Live Deployment
 
