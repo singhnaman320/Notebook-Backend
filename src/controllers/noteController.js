@@ -1,69 +1,40 @@
-const Note = require("../models/noteModel");
+const noteService = require('../services/noteService');
 
 const getNotes = async (req, res) => {
   try {
-    const notes = await Note.find({ user: req.user._id });
+    const notes = await noteService.getNotes(req.user._id);
     res.json(notes);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
 const createNote = async (req, res) => {
   try {
     const { title, content } = req.body;
-
-    const note = await Note.create({
-      user: req.user._id,
-      title,
-      content,
-    });
-
+    const note = await noteService.createNote(req.user._id, title, content);
     res.status(201).json(note);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
 const updateNote = async (req, res) => {
   try {
     const { title, content } = req.body;
-    const note = await Note.findById(req.params.id);
-
-    if (!note) {
-      return res.status(404).json({ message: "Note not found" });
-    }
-
-    if (note.user.toString() !== req.user._id.toString()) {
-      return res.status(401).json({ message: "Not authorized" });
-    }
-
-    note.title = title;
-    note.content = content;
-
-    const updatedNote = await note.save();
-    res.json(updatedNote);
+    const note = await noteService.updateNote(req.params.id, req.user._id, title, content);
+    res.json(note);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
 const deleteNote = async (req, res) => {
   try {
-    const note = await Note.findById(req.params.id);
-
-    if (!note) {
-      return res.status(404).json({ message: "Note not found" });
-    }
-
-    if (note.user.toString() !== req.user._id.toString()) {
-      return res.status(401).json({ message: "Not authorized" });
-    }
-
-    await Note.findByIdAndDelete(req.params.id);
-    res.json({ message: "Note removed" });
+    const result = await noteService.deleteNote(req.params.id, req.user._id);
+    res.json(result);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(400).json({ error: error.message });
   }
 };
 
